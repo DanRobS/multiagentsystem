@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<instance>
+  <presentation name="CELAR Problem" maxConstraintArity="2" format="XCSP 2.1_FRODO" maximizing="false" />
+  <agents nbAgents="4">
+    <agent name="agent1" />
+    <agent name="agent2" />
+    <agent name="agent3" />
+    <agent name="agent4" />
+  </agents>
+  <domains nbDomains="2">
+    <domain number="1" nbValues="44">58..296</domain>
+    <domain number="2" nbValues="22">30..58</domain>
+  </domains>
+  <variables nbVariables="4">
+    <variable name="V1" nbValues=" 1" agent="agent1" />
+    <variable name="V2" nbValues=" 1" agent="agent2" />
+    <variable name="V3" nbValues=" 2" agent="agent3" />
+    <variable name="V4" nbValues=" 2" agent="agent4" />
+  </variables>
+  <constraints nbConstraints="2">
+    <constraint name="C1" scope="V1 V2" arity="2" reference="equals">
+      <parameters>V1 V2</parameters>
+    </constraint>
+    <constraint name="C2" scope="V3 V4" arity="2" reference="equals">
+      <parameters>V3 V4</parameters>
+    </constraint>
+  </constraints>
+</instance>
