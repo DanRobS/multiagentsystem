@@ -154,28 +154,28 @@ public class App
 		Element predicate = new Element("predicate");
 		predicate.setAttribute("name", "gt");
 		Element parameters = new Element("parameters");
-		parameters.setText("int x int y");
+		parameters.setText(" int x int y ");
 		Element expression = new Element("expression");
 		Element functional = new Element("functional");
-		functional.setText("gt(x,y)");
+		functional.setText(" gt(x,y) ");
 		
 		expression.addContent(functional);
-		parameters.addContent(expression);
 		predicate.addContent(parameters);
+		predicate.addContent(expression);
 		predicates.addContent(predicate);
 		
 		//predicate "equals"
 		Element predicate2 = new Element("predicate");
 		predicate2.setAttribute("name", "eq");
 		Element parameters2 = new Element("parameters");
-		parameters2.setText("int x int y");
+		parameters2.setText(" int x int y ");
 		Element expression2 = new Element("expression");
 		Element functional2 = new Element("functional");
-		functional2.setText("eq(x,y)");
+		functional2.setText(" eq(x,y) ");
 		
 		expression2.addContent(functional2);
-		parameters2.addContent(expression2);
 		predicate2.addContent(parameters2);
+		predicate2.addContent(expression2);
 		predicates.addContent(predicate2);
 		
 		return predicates;

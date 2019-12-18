@@ -17,6 +17,20 @@
     <variable name="V3" domain="2" agent="agent3" />
     <variable name="V4" domain="2" agent="agent4" />
   </variables>
+  <predicates nbPredicates="2">
+    <predicate name="gt">
+      <parameters>int x int y</parameters>
+      <expression>
+        <functional>gt(x,y)</functional>
+      </expression>
+    </predicate>
+    <predicate name="eq">
+      <parameters>int x int y</parameters>
+      <expression>
+        <functional>eq(x,y)</functional>
+      </expression>
+    </predicate>
+  </predicates>
   <constraints nbConstraints="2">
     <constraint name="C1" scope="V1 V2" arity="2" reference="eq">
       <parameters>V1 V2</parameters>
