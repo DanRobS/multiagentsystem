@@ -118,7 +118,7 @@ public class App
 					constraint.setAttribute("arity","2");
 					constraint.setAttribute("reference","gt");
 					parameters.setText("V"+separator[0]+" V"+separator[1]);
-					constraints.addContent(parameters);
+					constraint.addContent(parameters);
 					constraints.addContent(constraint);
 				}
 				
