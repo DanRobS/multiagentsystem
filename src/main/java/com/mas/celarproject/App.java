@@ -13,8 +13,7 @@ import org.jdom2.output.XMLOutputter;
 import org.jdom2.Document;
 import org.jdom2.Element;
 
-public class App 
-{
+public class App {
 	//Creates the <agents> tag
 	static public Element createAgentTag(int nb) {
 		int i=1;
@@ -36,8 +35,7 @@ public class App
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return agents;
-		
+		return agents;		
 	}
 	
 	//Creates the <domain> tag
@@ -53,17 +51,13 @@ public class App
 				Element domain = new Element("domain");
 				domain.setAttribute("name",separator[0]);
 				domain.setAttribute("nbValues",separator[2]);
-	//System.out.println(separator[2]);			
 				domain.setText(separator[4]+"  "+separator[separator.length-1]);
 				domains.addContent(domain);
-				//System.out.println(separator[fileLines.size()+1]);
-			}
-			
+			}	
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 		return domains;
 	}
 	
@@ -120,15 +114,12 @@ public class App
 					parameters.setText("V"+separator[0]+" V"+separator[1]);
 					constraint.addContent(parameters);
 					constraints.addContent(constraint);
-				}
-				
-			}
-			
+				}	
+			}	
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 		return constraints;
 	}
 	
@@ -201,8 +192,7 @@ public class App
 		}
 	}
 	
-    public static void main( String[] args )
-    {
+    public static void main( String[] args ){
         generateProblem(1);
     }
 }
