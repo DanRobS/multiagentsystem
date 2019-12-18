@@ -64,9 +64,9 @@ public class App
 			for(String line: fileLines) {
 				String[] separator = line.trim().split("  ");
 				Element domain = new Element("domain");
-				domain.setAttribute("number",separator[0]);
+				domain.setAttribute("name",separator[0]);
 				domain.setAttribute("nbValues",separator[1]);
-				domain.setText(separator[2]+".."+separator[fileLines.size()+1]);
+				domain.setText(separator[2]+"  "+separator[fileLines.size()+1]);
 				domains.addContent(domain);
 				//System.out.println(separator[fileLines.size()+1]);
 			}
@@ -90,7 +90,7 @@ public class App
 				String[] separator = line.trim().split("  ");
 				Element variable = new Element("variable");
 				variable.setAttribute("name","V"+separator[0]);
-				variable.setAttribute("nbValues",separator[1]);
+				variable.setAttribute("domain",separator[1].trim());
 				variable.setAttribute("agent","agent"+separator[0]);
 				variables.addContent(variable);
 			}
@@ -120,7 +120,7 @@ public class App
 					constraint.setAttribute("name","C"+i);
 					constraint.setAttribute("scope","V"+separator[0]+" V"+separator[1]);
 					constraint.setAttribute("arity","2");
-					constraint.setAttribute("reference","equals");
+					constraint.setAttribute("reference","eq");
 					parameters.setText("V"+separator[0]+" V"+separator[1]);
 					constraint.addContent(parameters);
 					constraints.addContent(constraint);
@@ -128,7 +128,7 @@ public class App
 					constraint.setAttribute("name","C"+i);
 					constraint.setAttribute("scope","V"+separator[0]+" V"+separator[1]);
 					constraint.setAttribute("arity","2");
-					constraint.setAttribute("reference","greaterThan");
+					constraint.setAttribute("reference","gt");
 					parameters.setText("V"+separator[0]+" V"+separator[1]);
 					constraints.addContent(parameters);
 					constraints.addContent(constraint);
@@ -144,6 +144,43 @@ public class App
 		return constraints;
 	}
 	
+	//Creates the <predicates> tag
+	static public Element createPredicatesTag() {
+		Element predicates = new Element("predicates");
+		
+		predicates.setAttribute("nbPredicates","2");
+		
+		//predicate "greater than"
+		Element predicate = new Element("predicate");
+		predicate.setAttribute("name", "gt");
+		Element parameters = new Element("parameters");
+		parameters.setText("int x int y");
+		Element expression = new Element("expression");
+		Element functional = new Element("functional");
+		functional.setText("gt(x,y)");
+		
+		expression.addContent(functional);
+		parameters.addContent(expression);
+		predicate.addContent(parameters);
+		predicates.addContent(predicate);
+		
+		//predicate "equals"
+		Element predicate2 = new Element("predicate");
+		predicate2.setAttribute("name", "eq");
+		Element parameters2 = new Element("parameters");
+		parameters2.setText("int x int y");
+		Element expression2 = new Element("expression");
+		Element functional2 = new Element("functional");
+		functional2.setText("eq(x,y)");
+		
+		expression2.addContent(functional2);
+		parameters2.addContent(expression2);
+		predicate2.addContent(parameters2);
+		predicates.addContent(predicate2);
+		
+		return predicates;
+	}
+	
 	//Generates the file problem.xml to use with FRODO
 	static public void generateProblem() {
 		
@@ -152,7 +189,7 @@ public class App
 			Document document = new Document(instance);
 			
 			Element presentation = new Element("presentation");
-			presentation.setAttribute("name","CELAR Problem");
+			presentation.setAttribute("name","celarProblem");
 			presentation.setAttribute("maxConstraintArity","2");
 			presentation.setAttribute("format","XCSP 2.1_FRODO");
 			presentation.setAttribute("maximizing","false");
@@ -161,6 +198,7 @@ public class App
 			instance.addContent(createAgentTag());
 			instance.addContent(createDomainTag());
 			instance.addContent(createVariableTag());
+			instance.addContent(createPredicatesTag());
 			instance.addContent(createConstraintTag());
 
 			XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
@@ -178,6 +216,5 @@ public class App
     public static void main( String[] args )
     {
         generateProblem();
-        //createConstraintTag();
     }
 }
