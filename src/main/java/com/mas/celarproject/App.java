@@ -15,18 +15,18 @@ import org.jdom2.Element;
 
 public class App {
 	//Creates the <agents> tag
-	static public Element createAgentTag(int nb) {
+	static public Element createAgentTag() {
 		int i=1;
 		Element agents = new Element("agents");
 		try {
-			List<String> fileLines = Files.readAllLines(Paths.get("CELAR/scen0"+nb+"/VAR.TXT"), Charset.defaultCharset());
+			List<String> fileLines = Files.readAllLines(Paths.get("CELAR/scen05/VAR.TXT"), Charset.defaultCharset());
             
             agents.setAttribute("nbAgents",""+fileLines.size());
             for ( String line : fileLines) {
+            	String[] separator = line.trim().split("[\\s]+",2);
             	Element agent = new Element("agent");
-            	agent.setAttribute("name","agent"+i);
+            	agent.setAttribute("name","agent"+separator[0]);
             	agents.addContent(agent);
-            	i++;
             }
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -39,19 +39,19 @@ public class App {
 	}
 	
 	//Creates the <domain> tag
-	static public Element createDomainTag(int nb) {
+	static public Element createDomainTag() {
 		Element domains = new Element("domains");
 		try {
-			List<String> fileLines = Files.readAllLines(Paths.get("CELAR/scen0"+nb+"/DOM.TXT"), Charset.defaultCharset());
+			List<String> fileLines = Files.readAllLines(Paths.get("CELAR/scen05/DOM.TXT"), Charset.defaultCharset());
 			fileLines.remove(0);
 			
 			domains.setAttribute("nbDomains",""+fileLines.size());
 			for(String line: fileLines) {
-				String[] separator = line.trim().split(" ");
+				String[] separator = line.trim().split("[\\s]+",3);
 				Element domain = new Element("domain");
-				domain.setAttribute("name",separator[0]);
-				domain.setAttribute("nbValues",separator[2]);
-				domain.setText(separator[4]+"  "+separator[separator.length-1]);
+				domain.setAttribute("name",separator[0].toString());
+				domain.setAttribute("nbValues",separator[1]);
+				domain.setText(separator[2].toString());
 				domains.addContent(domain);
 			}	
 		} catch (IOException e) {
@@ -62,18 +62,18 @@ public class App {
 	}
 	
 	//Creates the <variables> tag
-	static public Element createVariableTag(int nb) {
+	static public Element createVariableTag() {
 		Element variables = new Element("variables");
 		try {
-			List<String> fileLines = Files.readAllLines(Paths.get("CELAR/scen0"+nb+"/VAR.TXT"), Charset.defaultCharset());
+			List<String> fileLines = Files.readAllLines(Paths.get("CELAR/scen05/VAR.TXT"), Charset.defaultCharset());
 			
 			variables.setAttribute("nbVariables",""+fileLines.size());
 			for(String line: fileLines) {
-				String[] separator = line.trim().split("  ");
+				String[] separator = line.trim().split("[\\s]+",2);
 				Element variable = new Element("variable");
-				variable.setAttribute("name","V"+separator[0]);
-				variable.setAttribute("domain",separator[1].trim());
-				variable.setAttribute("agent","agent"+separator[0]);
+				variable.setAttribute("name","V"+separator[0].toString());
+				variable.setAttribute("domain",separator[1].substring(0, 1));
+				variable.setAttribute("agent","agent"+separator[0].toString());
 				variables.addContent(variable);
 			}
 		} catch (IOException e) {
@@ -84,11 +84,11 @@ public class App {
 	}
 	
 	//Creates the <constraints> tag
-	static public Element createConstraintTag(int nb) {
+	static public Element createConstraintTag() {
 		Element constraints = new Element("constraints");
 		
 		try {
-			List<String> fileLines = Files.readAllLines(Paths.get("CELAR/scen0"+nb+"/CTR.TXT"), Charset.defaultCharset());
+			List<String> fileLines = Files.readAllLines(Paths.get("CELAR/scen05/CTR.TXT"), Charset.defaultCharset());
 			int i=0;
 			constraints.setAttribute("nbConstraints",""+fileLines.size());
 			for(String line : fileLines) {
@@ -98,20 +98,20 @@ public class App {
 				Element constraint = new Element("constraint");
                 Element parameters = new Element("parameters");
                 
-				if(separator[3].equals("=")) {
+				if(separator[3].toString().equals("=")) {
 					constraint.setAttribute("name","C"+i);
-					constraint.setAttribute("scope","V"+separator[0]+" V"+separator[1]);
+					constraint.setAttribute("scope","V"+separator[0].toString()+" V"+separator[1].toString());
 					constraint.setAttribute("arity","2");
 					constraint.setAttribute("reference","eq");
-					parameters.setText("V"+separator[0]+" V"+separator[1]);
+					parameters.setText("V"+separator[0].toString()+" V"+separator[1].toString());
 					constraint.addContent(parameters);
 					constraints.addContent(constraint);
 				} else if (separator[3].equals(">")) {
 					constraint.setAttribute("name","C"+i);
-					constraint.setAttribute("scope","V"+separator[0]+" V"+separator[1]);
+					constraint.setAttribute("scope","V"+separator[0].toString()+" V"+separator[1].toString());
 					constraint.setAttribute("arity","2");
 					constraint.setAttribute("reference","gt");
-					parameters.setText("V"+separator[0]+" V"+separator[1]);
+					parameters.setText("V"+separator[0].toString()+" V"+separator[1].toString());
 					constraint.addContent(parameters);
 					constraints.addContent(constraint);
 				}	
@@ -129,28 +129,30 @@ public class App {
 		
 		predicates.setAttribute("nbPredicates","2");
 		
-		//predicate "greater than"
+		//predicate "greater than - gt"
 		Element predicate = new Element("predicate");
 		predicate.setAttribute("name", "gt");
+		predicate.setAttribute("return", "int");
 		Element parameters = new Element("parameters");
-		parameters.setText(" int x int y ");
+		parameters.setText("int x int y");
 		Element expression = new Element("expression");
 		Element functional = new Element("functional");
-		functional.setText(" gt(x,y) ");
+		functional.setText("gt(x,y)");
 		
 		expression.addContent(functional);
 		predicate.addContent(parameters);
 		predicate.addContent(expression);
 		predicates.addContent(predicate);
 		
-		//predicate "equals"
+		//predicate "equals - eq"
 		Element predicate2 = new Element("predicate");
 		predicate2.setAttribute("name", "eq");
+		predicate2.setAttribute("return", "int");
 		Element parameters2 = new Element("parameters");
-		parameters2.setText(" int x int y ");
+		parameters2.setText("int x int y");
 		Element expression2 = new Element("expression");
 		Element functional2 = new Element("functional");
-		functional2.setText(" eq(x,y) ");
+		functional2.setText("eq(x,y)");
 		
 		expression2.addContent(functional2);
 		predicate2.addContent(parameters2);
@@ -161,7 +163,7 @@ public class App {
 	}
 	
 	//Generates the file problem.xml to use with FRODO
-	static public void generateProblem(int nb) {
+	static public void generateProblem() {
 		
         try {
 			Element instance = new Element("instance");
@@ -174,14 +176,14 @@ public class App {
 			presentation.setAttribute("maximizing","false");
 			
 			instance.addContent(presentation);
-			instance.addContent(createAgentTag(nb));
-			instance.addContent(createDomainTag(nb));
-			instance.addContent(createVariableTag(nb));
+			instance.addContent(createAgentTag());
+			instance.addContent(createDomainTag());
+			instance.addContent(createVariableTag());
 			instance.addContent(createPredicatesTag());
-			instance.addContent(createConstraintTag(nb));
+			instance.addContent(createConstraintTag());
 
 			XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
-            xmlOutputter.output(document, new FileOutputStream("problem.xml"));
+            xmlOutputter.output(document, new FileOutputStream("problem5.xml"));
 			
 		}catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -193,6 +195,12 @@ public class App {
 	}
 	
     public static void main( String[] args ){
-        generateProblem(1);
+        generateProblem();
+        //to get an output file, run the following command:
+        
+        /* java -cp Multi-Agent\ Systems/frodo2.17.1/frodo2/frodo2.17.1.jar 
+         * frodo2.algorithms.AgentFactory Documents/workspace-spring-tool-suite-4-4.4.2.RELEASE/multiagentsystem/problem.xml 
+         * Multi-Agent\ Systems/frodo2.17.1/frodo2/agents/MGM/MGMagentJaCoP.xml > output_scen06_MGM.csv
+         * */
     }
 }
