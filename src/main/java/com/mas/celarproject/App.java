@@ -16,10 +16,10 @@ import org.jdom2.Element;
 public class App {
 	//Creates the <agents> tag
 	static public Element createAgentTag() {
-		int i=1;
+		//int i=1;
 		Element agents = new Element("agents");
 		try {
-			List<String> fileLines = Files.readAllLines(Paths.get("CELAR/scen05/VAR.TXT"), Charset.defaultCharset());
+			List<String> fileLines = Files.readAllLines(Paths.get("CELAR/scen00/VAR.TXT"), Charset.defaultCharset());
             
             agents.setAttribute("nbAgents",""+fileLines.size());
             for ( String line : fileLines) {
@@ -42,7 +42,7 @@ public class App {
 	static public Element createDomainTag() {
 		Element domains = new Element("domains");
 		try {
-			List<String> fileLines = Files.readAllLines(Paths.get("CELAR/scen05/DOM.TXT"), Charset.defaultCharset());
+			List<String> fileLines = Files.readAllLines(Paths.get("CELAR/scen00/DOM.TXT"), Charset.defaultCharset());
 			fileLines.remove(0);
 			
 			domains.setAttribute("nbDomains",""+fileLines.size());
@@ -65,7 +65,7 @@ public class App {
 	static public Element createVariableTag() {
 		Element variables = new Element("variables");
 		try {
-			List<String> fileLines = Files.readAllLines(Paths.get("CELAR/scen05/VAR.TXT"), Charset.defaultCharset());
+			List<String> fileLines = Files.readAllLines(Paths.get("CELAR/scen00/VAR.TXT"), Charset.defaultCharset());
 			
 			variables.setAttribute("nbVariables",""+fileLines.size());
 			for(String line: fileLines) {
@@ -88,13 +88,13 @@ public class App {
 		Element constraints = new Element("constraints");
 		
 		try {
-			List<String> fileLines = Files.readAllLines(Paths.get("CELAR/scen05/CTR.TXT"), Charset.defaultCharset());
+			List<String> fileLines = Files.readAllLines(Paths.get("CELAR/scen00/CTR.TXT"), Charset.defaultCharset());
 			int i=0;
 			constraints.setAttribute("nbConstraints",""+fileLines.size());
 			for(String line : fileLines) {
 				i++;
-				String separator[] = line.trim().split("[\\s]+");
-				
+				String separator[] = line.trim().split("[\\s]+",5);
+
 				Element constraint = new Element("constraint");
                 Element parameters = new Element("parameters");
                 
@@ -183,7 +183,7 @@ public class App {
 			instance.addContent(createConstraintTag());
 
 			XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
-            xmlOutputter.output(document, new FileOutputStream("problem5.xml"));
+            xmlOutputter.output(document, new FileOutputStream("problem00.xml"));
 			
 		}catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
