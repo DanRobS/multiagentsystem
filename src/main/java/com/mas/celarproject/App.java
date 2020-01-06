@@ -18,12 +18,13 @@ import org.jdom2.Element;
 
 public class App {
 	//Retrieve the cst.txt
-	//only takes as parameters double digits numbers from "04" to "11"
+	//the file's path on line 26 only takes double digits numbers from "04" to "11"
+	//from scen04 to scen11, since the cst files from scen00 to scen03 do not have anything other than plain text in them
 	static public List readCst() {
 		List<String> values = new ArrayList<String>();
 		values.add("0");
 		try {
-			List<String> fileLines = Files.readAllLines(Paths.get("CELAR/scen04/cst.txt"), Charset.defaultCharset());
+			List<String> fileLines = Files.readAllLines(Paths.get("CELAR/scen09/cst.txt"), Charset.defaultCharset());
 			for( String line : fileLines) {
 				String[] separator = line.trim().split("[\\s]+", 3);
 				values.add(separator[2].toString());
@@ -42,7 +43,9 @@ public class App {
 		//int i=1;
 		Element agents = new Element("agents");
 		try {
-			List<String> fileLines = Files.readAllLines(Paths.get("CELAR/scen03/VAR.TXT"), Charset.defaultCharset());
+			//the file's path on line 48 only takes double digits numbers from "00" to "11"
+			//from scen00 to scen11
+			List<String> fileLines = Files.readAllLines(Paths.get("CELAR/scen00/VAR.TXT"), Charset.defaultCharset());
             
             agents.setAttribute("nbAgents",""+fileLines.size());
             for ( String line : fileLines) {
@@ -65,7 +68,9 @@ public class App {
 	static public Element createDomainTag() {
 		Element domains = new Element("domains");
 		try {
-			List<String> fileLines = Files.readAllLines(Paths.get("CELAR/scen03/DOM.TXT"), Charset.defaultCharset());
+			//the file's path on line 74 only takes double digits numbers from "00" to "11"
+			//from scen00 to scen11
+			List<String> fileLines = Files.readAllLines(Paths.get("CELAR/scen00/DOM.TXT"), Charset.defaultCharset());
 			fileLines.remove(0);
 			
 			domains.setAttribute("nbDomains",""+fileLines.size());
@@ -88,7 +93,9 @@ public class App {
 	static public Element createVariableTag() {
 		Element variables = new Element("variables");
 		try {
-			List<String> fileLines = Files.readAllLines(Paths.get("CELAR/scen03/VAR.TXT"), Charset.defaultCharset());
+			//the file's path on line 98 only takes double digits numbers from "00" to "11"
+			//from scen00 to scen11
+			List<String> fileLines = Files.readAllLines(Paths.get("CELAR/scen00/VAR.TXT"), Charset.defaultCharset());
 			
 			variables.setAttribute("nbVariables",""+fileLines.size());
 			for(String line: fileLines) {
@@ -111,7 +118,9 @@ public class App {
 		Element constraints = new Element("constraints");
 		
 		try {
-			List<String> fileLines = Files.readAllLines(Paths.get("CELAR/scen03/CTR.TXT"), Charset.defaultCharset());
+			//the file's path on line 123 only takes double digits numbers from "00" to "11"
+			//from scen00 to scen11
+			List<String> fileLines = Files.readAllLines(Paths.get("CELAR/scen00/CTR.TXT"), Charset.defaultCharset());
 			int i=0;
 			constraints.setAttribute("nbConstraints",""+fileLines.size());
 			for(String line : fileLines) {
@@ -242,7 +251,7 @@ public class App {
 			instance.addContent(createConstraintTag());
 
 			XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
-            xmlOutputter.output(document, new FileOutputStream("problem3.xml"));
+            xmlOutputter.output(document, new FileOutputStream("problem00.xml"));
 			
 		}catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -255,11 +264,5 @@ public class App {
 	
     public static void main( String[] args ){
         generateProblem();
-        //to get an output file, run the following command:
-        
-        /* java -cp Multi-Agent\ Systems/frodo2.17.1/frodo2/frodo2.17.1.jar 
-         * frodo2.algorithms.AgentFactory Documents/workspace-spring-tool-suite-4-4.4.2.RELEASE/multiagentsystem/problem.xml 
-         * Multi-Agent\ Systems/frodo2.17.1/frodo2/agents/MGM/MGMagentJaCoP.xml > output_scen06_MGM.csv
-         * */
     }
 }
