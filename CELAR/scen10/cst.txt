@@ -1,8 +1,3 @@
-Objective: If there are several solutions find that one which minimizes the
-number of assigned values.
-If there is no solution minimize the cost function with the following 
-coefficients :
-
              a1 =   1000
              a2 =    100
              a3 =      2
@@ -11,4 +6,3 @@ coefficients :
              b2 =  10000
              b3 =    100
              b4 =     10
-

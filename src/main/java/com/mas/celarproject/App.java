@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jdom2.output.Format;
@@ -13,13 +14,35 @@ import org.jdom2.output.XMLOutputter;
 import org.jdom2.Document;
 import org.jdom2.Element;
 
+
+
 public class App {
+	//Retrieve the cst.txt
+	//only takes as parameters double digits numbers from "04" to "11"
+	static public List readCst() {
+		List<String> values = new ArrayList<String>();
+		values.add("0");
+		try {
+			List<String> fileLines = Files.readAllLines(Paths.get("CELAR/scen04/cst.txt"), Charset.defaultCharset());
+			for( String line : fileLines) {
+				String[] separator = line.trim().split("[\\s]+", 3);
+				values.add(separator[2].toString());
+
+			}
+			//System.out.println(values.toString());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return values;
+	}
+	
 	//Creates the <agents> tag
 	static public Element createAgentTag() {
 		//int i=1;
 		Element agents = new Element("agents");
 		try {
-			List<String> fileLines = Files.readAllLines(Paths.get("CELAR/scen00/VAR.TXT"), Charset.defaultCharset());
+			List<String> fileLines = Files.readAllLines(Paths.get("CELAR/scen03/VAR.TXT"), Charset.defaultCharset());
             
             agents.setAttribute("nbAgents",""+fileLines.size());
             for ( String line : fileLines) {
@@ -42,7 +65,7 @@ public class App {
 	static public Element createDomainTag() {
 		Element domains = new Element("domains");
 		try {
-			List<String> fileLines = Files.readAllLines(Paths.get("CELAR/scen00/DOM.TXT"), Charset.defaultCharset());
+			List<String> fileLines = Files.readAllLines(Paths.get("CELAR/scen03/DOM.TXT"), Charset.defaultCharset());
 			fileLines.remove(0);
 			
 			domains.setAttribute("nbDomains",""+fileLines.size());
@@ -65,7 +88,7 @@ public class App {
 	static public Element createVariableTag() {
 		Element variables = new Element("variables");
 		try {
-			List<String> fileLines = Files.readAllLines(Paths.get("CELAR/scen00/VAR.TXT"), Charset.defaultCharset());
+			List<String> fileLines = Files.readAllLines(Paths.get("CELAR/scen03/VAR.TXT"), Charset.defaultCharset());
 			
 			variables.setAttribute("nbVariables",""+fileLines.size());
 			for(String line: fileLines) {
@@ -88,22 +111,56 @@ public class App {
 		Element constraints = new Element("constraints");
 		
 		try {
-			List<String> fileLines = Files.readAllLines(Paths.get("CELAR/scen00/CTR.TXT"), Charset.defaultCharset());
+			List<String> fileLines = Files.readAllLines(Paths.get("CELAR/scen03/CTR.TXT"), Charset.defaultCharset());
 			int i=0;
 			constraints.setAttribute("nbConstraints",""+fileLines.size());
 			for(String line : fileLines) {
 				i++;
-				String separator[] = line.trim().split("[\\s]+",5);
+				String separator[] = line.trim().split("[\\s]+",6);
 
 				Element constraint = new Element("constraint");
                 Element parameters = new Element("parameters");
+                
+                String val = "0";
+                String num = "";
+                List<String> cst = readCst();
+                int x = 0;
+                if(separator.length==6) {
+                	val = separator[5].toString();
+                	
+                	if(val.equals("0")) {
+                		x=0;
+                		num = cst.get(x);
+                	} else if(val.equals("1")) {
+                		x=1;
+                		num = cst.get(x);
+                	} else if(val.equals("2")) {
+                		x=2;
+                		num = cst.get(x);
+                	} else if(val.equals("3")) {
+                		x=3;
+                		num = cst.get(x);
+                	} else if(val.equals("4")) {
+                		x=4;
+                		num = cst.get(x);
+                	} else if(val.equals("5")) {
+                		x=5;
+                		num = cst.get(x);
+                	}
+                } else {
+                	num="0";
+                }
+                //System.out.println(num);
+                //num = cst.get(x);
                 
 				if(separator[3].toString().equals("=")) {
 					constraint.setAttribute("name","C"+i);
 					constraint.setAttribute("scope","V"+separator[0].toString()+" V"+separator[1].toString());
 					constraint.setAttribute("arity","2");
 					constraint.setAttribute("reference","eq");
-					parameters.setText("V"+separator[0].toString()+" V"+separator[1].toString());
+					//if(val!="0") {
+						parameters.setText("V"+separator[0].toString()+" V"+separator[1].toString()+" "+separator[4].toString()+" "+num);
+					//} else parameters.setText("V"+separator[0].toString()+" V"+separator[1].toString()+" "+separator[4].toString()+" "+val);
 					constraint.addContent(parameters);
 					constraints.addContent(constraint);
 				} else if (separator[3].equals(">")) {
@@ -111,7 +168,9 @@ public class App {
 					constraint.setAttribute("scope","V"+separator[0].toString()+" V"+separator[1].toString());
 					constraint.setAttribute("arity","2");
 					constraint.setAttribute("reference","gt");
-					parameters.setText("V"+separator[0].toString()+" V"+separator[1].toString());
+					//if(val!="0") {
+						parameters.setText("V"+separator[0].toString()+" V"+separator[1].toString()+" "+separator[4].toString()+" "+num);
+					//} else parameters.setText("V"+separator[0].toString()+" V"+separator[1].toString()+" "+separator[4].toString()+" "+val);
 					constraint.addContent(parameters);
 					constraints.addContent(constraint);
 				}	
@@ -134,10 +193,10 @@ public class App {
 		predicate.setAttribute("name", "gt");
 		predicate.setAttribute("return", "int");
 		Element parameters = new Element("parameters");
-		parameters.setText("int x int y");
+		parameters.setText("int x int y int z int val");
 		Element expression = new Element("expression");
 		Element functional = new Element("functional");
-		functional.setText("gt(x,y)");
+		functional.setText("if(gt(abs(sub(x,y))),z),0,val)");
 		
 		expression.addContent(functional);
 		predicate.addContent(parameters);
@@ -149,10 +208,10 @@ public class App {
 		predicate2.setAttribute("name", "eq");
 		predicate2.setAttribute("return", "int");
 		Element parameters2 = new Element("parameters");
-		parameters2.setText("int x int y");
+		parameters2.setText("int x int y int z int val");
 		Element expression2 = new Element("expression");
 		Element functional2 = new Element("functional");
-		functional2.setText("eq(x,y)");
+		functional2.setText("if(eq(abs(sub(x,y))),z),0,val)");
 		
 		expression2.addContent(functional2);
 		predicate2.addContent(parameters2);
@@ -164,7 +223,7 @@ public class App {
 	
 	//Generates the file problem.xml to use with FRODO
 	static public void generateProblem() {
-		
+		//readCst("05");
         try {
 			Element instance = new Element("instance");
 			Document document = new Document(instance);
@@ -183,7 +242,7 @@ public class App {
 			instance.addContent(createConstraintTag());
 
 			XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
-            xmlOutputter.output(document, new FileOutputStream("problem00.xml"));
+            xmlOutputter.output(document, new FileOutputStream("problem3.xml"));
 			
 		}catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block

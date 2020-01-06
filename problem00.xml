@@ -20,24 +20,24 @@
   </variables>
   <predicates nbPredicates="2">
     <predicate name="gt" return="int">
-      <parameters>int x int y</parameters>
+      <parameters>int x int y int z int val</parameters>
       <expression>
-        <functional>gt(x,y)</functional>
+        <functional>if(gt(abs(sub(x,y))),z),0,val)</functional>
       </expression>
     </predicate>
     <predicate name="eq" return="int">
-      <parameters>int x int y</parameters>
+      <parameters>int x int y int z int val</parameters>
       <expression>
-        <functional>eq(x,y)</functional>
+        <functional>if(eq(abs(sub(x,y))),z),0,val)</functional>
       </expression>
     </predicate>
   </predicates>
   <constraints nbConstraints="2">
     <constraint name="C1" scope="V1 V2" arity="2" reference="eq">
-      <parameters>V1 V2</parameters>
+      <parameters>V1 V2 238 0</parameters>
     </constraint>
     <constraint name="C2" scope="V3 V4" arity="2" reference="eq">
-      <parameters>V3 V4</parameters>
+      <parameters>V3 V4 238 0</parameters>
     </constraint>
   </constraints>
 </instance>
